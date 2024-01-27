@@ -1,0 +1,32 @@
+pipeline {
+    agent any 
+    stages {
+        stage('clone repo') { 
+            steps {
+                sh "rm -rf sampleappproject"
+                sh "git clone https://github.com/devopstraining611-282/sampleappproject.git"
+                sh "ant clean -f sampleappproject"
+            }
+        }
+	stage('Initialize') { 
+            steps {
+                sh "ant init -f sampleappproject"
+            }
+        }
+        stage('Compile') { 
+            steps {
+                sh "ant compile -f sampleappproject"
+            }
+        }
+        stage('package') { 
+            steps {
+                sh "ant war -f sampleappproject"
+            }
+        }
+        stage('deploy') { 
+            steps {
+                sh "cp dist/sampleapp.war /var/lib/tomcat9/webapps"
+            }
+        }
+    }
+}
